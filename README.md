@@ -5,5 +5,5 @@ Repository to store my personal implementation of the course: [Lua Programming a
 # Games
 
 1. [Shooting Game](ShootingGame/)
-2. [Top Down Shooter](TopDownShooter)
-3. [Plataformer](Plataformer) (Incomplete)
+2. [Top Down Shooter](TopDownShooter/)
+3. [Plataformer](Plataformer/) (Incomplete)
