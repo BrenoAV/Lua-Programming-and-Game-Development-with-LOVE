@@ -14,9 +14,9 @@ function Enemy:new(x, y, world)
     o.physics = {}
     o.physics.body = love.physics.newBody(world, x, y, "dynamic")
     o.physics.shape = love.physics.newRectangleShape(70, 90)
-    o.physics.texture = love.physics.newFixture(o.physics.body,
+    o.physics.fixture = love.physics.newFixture(o.physics.body,
         o.physics.shape, 1)
-    o.physics.texture:setUserData("Enemy")
+    o.physics.fixture:setUserData("Enemy")
 
     o.speed = 100
     o.direction = 1
@@ -27,14 +27,22 @@ function Enemy:new(x, y, world)
         o.spriteSheet:getHeight())
     o.animation = anim8.newAnimation(o.grid('1-2', 1), 0.03)
 
+
     return o
+end
+
+function Enemy:destroy()
+    self.physics.fixture:destroy()
+    self = nil
+end
+
+function Enemy:update(dt)
+    self:move(dt)
+    self.animation:update(dt)
 end
 
 function Enemy:move(dt)
     local ex, _ = self.physics.body:getPosition()
-    if ex < 200 or ex > 600 then
-        self.direction = self.direction * (-1)
-    end
     self.physics.body:setX(ex - self.speed * self.direction * dt)
 end
 
@@ -43,5 +51,8 @@ function Enemy:draw()
 
     self.animation:draw(self.spriteSheet, ex, ey, nil, - self.direction*1,
         1, 50, 65)
+end
 
+function Enemy:changeDirection()
+    self.direction = self.direction * (-1)
 end

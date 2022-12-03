@@ -17,7 +17,7 @@ function Spike:new(o, x, y, width, height, world)
     self.physics.fixture = love.physics.newFixture(self.physics.body,
         self.physics.shape,
         1)
-    self.physics.fixture:setCategory(3)
+    self.physics.fixture:setCategory(15)
     self.physics.fixture:setUserData("Spike")
 
     return o

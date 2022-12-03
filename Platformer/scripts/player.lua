@@ -8,9 +8,11 @@ function Player:new(o, x, y, width, height, world)
 
     self.x = x + width / 2 -- Centralized
     self.y = y + height / 2 -- Centralized
+    self.startPosX = self.x
+    self.startPosY = self.y
     self.width = width
     self.height = height
-    self.speed = 200
+    self.speed = 240
     self.world = world
     self.dead = false
     self.isGrounded = false
@@ -34,12 +36,22 @@ function Player:new(o, x, y, width, height, world)
         self.physics.shape,
         1)
 
-    self.physics.fixture:setCategory(2)
     self.physics.body:setFixedRotation(true)
 
+    self.physics.fixture:setCategory(2)
     self.physics.fixture:setUserData("Player")
+    self.physics.fixture:setMask(4) -- Platform's end points
 
     return o
+end
+
+function Player:update(dt)
+    self:move(dt)
+    self:animationUpdate(dt)
+    if self.dead then
+        self:setPosition(self.startPosX, self.startPosY, false)
+        self.dead = false
+    end
 end
 
 function Player:draw()
@@ -60,14 +72,19 @@ function Player:draw()
 
     self.actualAnimation:draw(self.spriteSheet, px, py, nil, self.direction*0.25,
         0.25, 130, 282)
-    -- love.graphics.polygon(
-    --     "fill",
-    --     self.physics.body:getWorldPoints(self.physics.shape:getPoints())
-    --     )
+
 end
 
 function Player:animationUpdate(dt)
     self.actualAnimation:update(dt)
+end
+
+function Player:setPosition(x, y, startPos)
+    self.physics.body:setPosition(x, y)
+    if startPos then
+        self.startPosX = x
+        self.startPosY = y
+    end
 end
 
 function Player:move(dt)
@@ -88,14 +105,10 @@ end
 function Player:jump()
     if self.isGrounded and not self.isJumping then
         self.isJumping = true
-        self.physics.body:applyLinearImpulse(0, -5000)
+        self.physics.body:applyLinearImpulse(0, -4000)
     end
 end
 
-function Player:destroy()
+function Player:gameOver()
     self.dead = true
-end
-
-function Player:isDead()
-    return self.dead
 end
